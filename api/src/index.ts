@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import LoggerService from "./middleware/logger.middleware";
-import connection from "./config/database.config";
 import UserController from "./user/user.controller";
 import PostController from "./post/post.controller";
+import AuthController from "./auth/auth.controller";
+import logger from "./middleware/logger.middleware";
 
 const app = express();
 const port = 8000;
@@ -19,7 +19,9 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello !");
 });
 
-app.use(LoggerService);
+app.use(logger);
+
+app.use("/auth", AuthController);
 
 app.use("/users", UserController);
 
