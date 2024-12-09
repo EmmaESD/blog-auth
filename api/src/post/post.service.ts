@@ -1,7 +1,7 @@
 import client from "../config/database.config";
 import { Request, Response } from "express";
-import { IPostDTO } from "./post.type";
 import pool from "../config/database.config";
+import { IPost, IPostDTO } from "./post.type";
 
 const getAll = async (req: Request, res: Response) => {
   client.query("SELECT * from posts", function (error, results) {
@@ -14,33 +14,44 @@ const getAll = async (req: Request, res: Response) => {
   });
 };
 
-const getOne = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  console.log("end point get one (id): ", id);
-
-  const sql = "SELECT * FROM posts WHERE id = $1";
+const getOne = async (id: number): Promise<IPost | null> => {
+  const sql = "SELECT * FROM public.posts WHERE id = $1";
   const values = [id];
 
   try {
-    const result = await client.query(sql, values);
+    const result = await pool.query(sql, values);
+    const user = result.rows[0];
 
-    if (result.rows.length === 0) {
-      res.status(404).send({ error: "User not found" });
-      return;
-    }
-
-    res.status(200).send(result.rows[0]);
+    return user;
   } catch (error) {
-    console.error("Error fetching user", error);
-    res.status(500).send({ error: "Error while fetching data" });
+    console.error("Error fetching user:", error);
+    return null;
+  }
+};
+
+const getAllByUser = async (userId: number) => {
+  const query = "SELECT * FROM public.posts WHERE user_id = $1";
+  const values = [userId];
+
+  try {
+    const result = await pool.query(query, values);
+    return result.rows;
+  } catch (error) {
+    console.error("Error fetching posts for user:", error);
+    throw new Error("Failed to fetch posts for user");
   }
 };
 
 const create = async (postDTO: IPostDTO) => {
-  const values = [postDTO.title, postDTO.image, postDTO.content];
+  const values = [
+    postDTO.title,
+    postDTO.image,
+    postDTO.content,
+    postDTO.user_id,
+  ];
 
   const query =
-    "INSERT INTO public.posts (title, image, content) VALUES ($1, $2, $3) RETURNING id";
+    "INSERT INTO public.posts (title, image, content, user_id) VALUES ($1, $2, $3, $4) RETURNING id";
 
   try {
     await pool.query(query, values);
@@ -52,77 +63,63 @@ const create = async (postDTO: IPostDTO) => {
   }
 };
 
-const update = async (req: Request, res: Response) => {
-  const { id } = req.params;
+const update = async (
+  id: number,
+  postDTO: IPostDTO
+): Promise<IPostDTO | null> => {
+  try {
+    const { rows } = await client.query(
+      "SELECT * FROM public.posts WHERE id = $1",
+      [id]
+    );
 
-  console.log("end point update (id): ", id);
-  console.log("end point update (body): ", req.body);
-
-  client.query("SELECT * FROM travel WHERE id = ?", [id], (error, results) => {
-    console.log("results: ", results);
-    console.log("error: ", error);
-    if (error) {
-      console.log("error: ", error);
-      res.status(500).send({ error: "Error while fetching data" });
-      return;
-    }
-    if (Array.isArray(results) && results.length === 0) {
-      res.status(404).send({ error: "Travel not found" });
-      return;
+    if (rows.length === 0) {
+      return null;
     }
 
-    if (Array.isArray(results) && results.length === 1) {
-      const currentPost = results[0];
-      const newPost = {
-        ...currentPost,
-        ...req.body,
-      };
+    const sqlUpdate =
+      "UPDATE public.posts SET title = $1, image = $2, content = $3, user_id=$4 WHERE id = $5 RETURNING *";
+    const values = [
+      postDTO.title,
+      postDTO.image,
+      postDTO.content,
+      postDTO.user_id,
+      id,
+    ];
 
-      console.log("newPost: ", newPost);
+    const updatedPost = await client.query(sqlUpdate, values);
 
-      const sqlUpdate =
-        "UPDATE posts SET title = ?, image = ?, content = ?, WHERE id = ?";
-      const values = [newPost.title, newPost.image, newPost.content, id];
-
-      client.query(sqlUpdate, values, (error, results) => {
-        if (error) {
-          res.status(500).send({ error: "Error while updating data" });
-          return;
-        }
-
-        res.status(200).send({ message: "Travel updated successfully" });
-      });
-    }
-  });
+    return updatedPost.rows[0];
+  } catch (error) {
+    console.error("Error during update:", error);
+    throw new Error("Failed to update post");
+  }
 };
 
-const remove = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  console.log("end point delete (id): ", id);
-
-  const sqlSelect = "SELECT * FROM posts WHERE id = $1"; // Utilisation de $1 pour PostgreSQL
-  const sqlDelete = "DELETE FROM posts WHERE id = $1"; // Utilisation de $1 pour PostgreSQL
-  const values = [id];
+const remove = async (id: number, user_id: number): Promise<boolean> => {
+  const sqlSelect = "SELECT * FROM posts WHERE id = $1 AND user_id = $2";
+  const sqlDelete = "DELETE FROM posts WHERE id = $1 AND user_id = $2";
+  const values = [id, user_id];
 
   try {
     const result = await client.query(sqlSelect, values);
 
     if (result.rows.length === 0) {
-      res.status(404).send({ error: "Post not found" });
-      return;
+      // Post non trouvé ou l'utilisateur n'est pas autorisé
+      return false;
     }
 
     await client.query(sqlDelete, values);
-
-    res.status(200).send({ message: "Post deleted successfully" });
+    return true;
   } catch (error) {
     console.error("Error during delete operation", error);
-    res.status(500).send({ error: "Error while deleting post" });
+    throw new Error("Failed to delete post");
   }
 };
 
 export default {
   getAll,
+  getAllByUser,
   getOne,
   create,
   remove,

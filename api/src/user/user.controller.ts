@@ -17,7 +17,6 @@ UserController.get("/:id", async (req: Request, res: Response) => {
   if (!user) {
     res.status(404).send("User not found");
   }
-
   res.send(user);
 });
 UserController.get("/:id", UserService.update);
