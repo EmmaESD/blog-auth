@@ -1,5 +1,7 @@
 import client from "../config/database.config";
 import { Request, Response } from "express";
+import { IPostDTO } from "./post.type";
+import pool from "../config/database.config";
 
 const getAll = async (req: Request, res: Response) => {
   client.query("SELECT * from posts", function (error, results) {
@@ -34,27 +36,19 @@ const getOne = async (req: Request, res: Response) => {
   }
 };
 
-const create = async (req: Request, res: Response) => {
-  const { title, image, content } = req.body;
+const create = async (postDTO: IPostDTO) => {
+  const values = [postDTO.title, postDTO.image, postDTO.content];
 
-  const sql =
-    "INSERT INTO posts (title, image, content) VALUES ($1, $2, $3) RETURNING id";
-  const values = [title, image, content];
+  const query =
+    "INSERT INTO public.posts (title, image, content) VALUES ($1, $2, $3) RETURNING id";
 
   try {
-    const result = await client.query(sql, values);
+    await pool.query(query, values);
 
-    if (result.rows.length > 0) {
-      console.log("inserted id: ", result.rows[0].id);
-      res
-        .status(200)
-        .send({ message: "post created successfully", id: result.rows[0].id });
-    } else {
-      res.status(500).send({ error: "Error while creating data" });
-    }
+    return true;
   } catch (error) {
-    console.error("Error executing query", error);
-    res.status(500).send({ error: "Error while creating data" });
+    console.error("Error creating user:", error);
+    return false;
   }
 };
 
