@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import PostService from "./post.service";
 import { IPostDTO } from "./post.type";
-import pool from "../config/database.config";
 
 const PostController = Router();
 
