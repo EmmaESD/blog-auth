@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import PostService from "./post.service";
 import { IPostDTO } from "./post.type";
+import authMiddleware from "../middleware/auth.middleware";
 
 const PostController = Router();
 
@@ -16,14 +17,12 @@ PostController.get("/user/:userId", async (req: Request, res: Response) => {
     res.status(500).send({ error: "Failed to fetch posts" });
   }
 });
-import authMiddleware from "../middleware/auth.middleware";
-
 PostController.post(
   "/",
   authMiddleware,
   async (req: Request, res: Response): Promise<void> => {
     const { title, image, content } = req.body;
-    const user_id = req.user?.id?.toString(); // L'ID de l'utilisateur provient du token décrypté
+    const user_id = req.user?.id?.toString();
 
     if (!user_id) {
       res.status(400).send({ error: "User ID is missing" });

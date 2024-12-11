@@ -25,33 +25,33 @@
 
 ## posts (CRUD)
 
-## Tables
+# Tables
 
 ## User
 
-## id [Int PK]
+- id [Int PK]
 
-## username [varchar]
+- username [varchar]
 
-## password [varchar]
+- password [varchar]
 
-## email [varchar]
+- email [varchar]
 
-## created_at [timestamp]
+- created_at [timestamp]
 
 ## Post
 
-## id [Int PK]
+- id [Int PK]
 
-## user_id [Int FK] (Many To One)
+- user_id [Int FK] (Many To One)
 
-## title [varchar]
+- title [varchar]
 
-## content [varchar]
+- content [varchar]
 
-## created_at [timestamp]
+- created_at [timestamp]
 
-## image_path [varchar]
+- image_path [varchar]
 
 # Step to init project (Back)
 
