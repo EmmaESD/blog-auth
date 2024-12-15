@@ -1,19 +1,52 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { UserType } from "../types/user.type";
 
-export const signin = async (username: string, password: string) => {
-  const response = await fetch(`${API_URL}/auth/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username, password }),
-  });
+const API_URL = "http://localhost:8000";
 
-  if (!response.ok) {
-    throw new Error("Échec de la connexion");
+export const signin = async (credentials: UserType) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de la connexion de l'utilisateur", error);
+    throw error;
   }
+};
 
-  const data = await response.json();
+export const signup = async (credentials: UserType) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
 
-  localStorage.setItem("token", data.token);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erreur lors de l'inscription de l'utilisateur", error);
+    throw error;
+  }
+};
+
+export default {
+  signin,
+  signup,
 };
