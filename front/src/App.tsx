@@ -4,17 +4,16 @@ import SinglePostPage from "./pages/SinglePostPage";
 import UserPostPage from "./pages/UserPostPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import UpdatePostPage from "./pages/UpdatePostPage";
-import Menu from "./components/Menu";
 import Navbar from "./components/Navbar";
 import AuthPage from "./pages/AuthPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Menu from "./components/Menu";
 
 function App() {
   return (
     <BrowserRouter>
       <main className="flex flex-col">
         <Navbar />
-
         <div>
           <Routes>
             <Route element={<ProtectedRoute />}>

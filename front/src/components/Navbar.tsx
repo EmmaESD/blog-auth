@@ -7,6 +7,15 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleLogOut = () => {
+    try {
+      localStorage.removeItem("access_token");
+      window.location.reload();
+    } catch (e) {
+      console.log("Erreur lors de la suppression de la session : " + e);
+    }
+  };
+
   return (
     <nav className="flex items-center justify-between p-4 bg-bgLight text-dark">
       <div className="text-xl font-bold">GreenBlog</div>
@@ -41,9 +50,9 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <a href="/contact" className="block hover:text-gray-400">
+            <div onClick={handleLogOut} className="block hover:text-gray-400">
               Se déconnecter
-            </a>
+            </div>
           </li>
         </ul>
       </div>

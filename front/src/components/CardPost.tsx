@@ -6,15 +6,13 @@ type CardPostProps = {
 
 const CardPost = ({ post }: CardPostProps) => {
   return (
-    <div className="flex flex-col items-center justify-between w-80 rounded-lg overflow-hidden shadow-lg bg-white hover:greenLight transition-shadow duration-300">
-      {/* Image */}
+    <div className="flex flex-col items-center justify-between w-80 rounded-lg overflow-hidden shadow-lg bg-white hover:transition-shadow duration-300">
       <img
         src={post.image}
         alt={post.title}
         className="w-full h-48 object-cover"
       />
 
-      {/* Contenu de la carte */}
       <div className="flex flex-col items-center justify-between p-5 h-full">
         {/* Titre */}
         <h1 className="text-md font-semibold text-gray-900 truncate">
@@ -22,8 +20,8 @@ const CardPost = ({ post }: CardPostProps) => {
         </h1>
 
         <a
-          href={`/post/${post.id}`} // Exemple de lien vers le post
-          className="inline-block mt-4 px-6 py-2 text-white rounded-md bg-violetDark transition-colors duration-200"
+          href={`/post/${post.id}`}
+          className="inline-block mt-4 px-6 py-2 text-white rounded-md bg-violetLight hover:bg-violetDark transition-colors duration-200"
         >
           Voir l'article
         </a>
