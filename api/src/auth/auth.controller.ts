@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import AuthService from "./auth.service";
+import authMiddleware from "../middleware/auth.middleware";
 
 const AuthController = Router();
 
@@ -27,5 +28,13 @@ AuthController.post("/signup", async (req: Request, res: Response) => {
     res.status(400).send({ message: "User not created" });
   }
 });
+
+AuthController.get(
+  "/verify",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    res.status(200).send({ message: "Token valid" });
+  }
+);
 
 export default AuthController;

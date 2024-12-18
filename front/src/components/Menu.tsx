@@ -12,14 +12,14 @@ const Menu = () => {
       {/* Bouton Burger */}
       <button
         onClick={toggleMenu}
-        className="p-3 focus:outline-none z-20 fixed top-4 right-4 bg-gray-800 text-white rounded-md"
+        className="p-3 focus:outline-none z-20 fixed top-4 right-4 bg-bgLight text-dark rounded-md bgLight"
       >
         ☰
       </button>
 
       {/* Menu qui slide */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-gray-800 text-white transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-64 bgLight text-white transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -52,7 +52,7 @@ const Menu = () => {
       {isOpen && (
         <div
           onClick={toggleMenu}
-          className="fixed inset-0 bg-black bg-opacity-50 z-10"
+          className="fixed inset-0 bg-bgLight bg-opacity-50 z-10"
         ></div>
       )}
     </div>

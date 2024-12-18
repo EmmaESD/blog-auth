@@ -8,24 +8,24 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">
+    <nav className="flex items-center justify-between p-4 bg-bgLight text-dark">
       <div className="text-xl font-bold">GreenBlog</div>
 
       <button
         onClick={toggleMenu}
-        className="p-2 focus:outline-none bg-gray-700 rounded-md"
+        className="p-2 focus:outline-none bg- rounded-md"
       >
         ☰
       </button>
 
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-gray-800 text-white transform transition-transform duration-300 z-10 ${
+        className={`fixed top-0 right-0 h-full w-64 bg-bgLight text-dark transform transition-transform duration-300 z-10 ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <button
           onClick={toggleMenu}
-          className="absolute top-4 left-4 text-white"
+          className="absolute top-4 left-4 text-dark"
         >
           ✕
         </button>
