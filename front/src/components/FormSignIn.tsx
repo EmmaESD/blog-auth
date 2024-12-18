@@ -14,28 +14,22 @@ const FormSignIn = () => {
     e.preventDefault();
 
     try {
-      //on envoie la requête de signin avec les identifiants et on récupère le token
-      console.log("bonjour");
       const token = await signin(credentials);
-      console.log("aurevoir" + token);
-      // si on ne reçois pas de token il y a un problème et on stoppe le code ici
+
       if (token == undefined) {
         return;
       }
 
-      // enregistrement du token dans le local storage
       localStorage.removeItem("access_token");
       localStorage.setItem("access_token", token);
 
-      // reset des champs du formulaire
       setCredentials({
         username: "",
         password: "",
       });
 
-      // retour à la page d'accueil
       navigate("/");
-      // actualisation de toutes la page pour mettre à jour tout les components s'éxécutant seulement quand un compte est connecté
+
       window.location.reload();
     } catch (error) {
       console.error("Erreur lors de la connexion de l'utilisateur", error);
@@ -52,23 +46,31 @@ const FormSignIn = () => {
   };
 
   return (
-    <div className="mx-auto max-w-sm">
-      <form onSubmit={handleSubmit} className="grid gap-4">
-        <div className="grid gap-2">
+    <div className="mx-auto flex items-center max-w-sm">
+      <form
+        onSubmit={handleSubmit}
+        className=" gap-4 flex flex-col justify-center "
+      >
+        <h2 className="text-center">Login</h2>
+        <div className="flex flex-col gap-2 w-full">
+          <label>Nom d'utilisateur</label>
           <input
+            className="w-full bg-bgGrey text-dark p-2 rounded-md"
             id="username"
             onChange={handleChange}
             name="username"
             type="text"
             value={credentials.username}
-            placeholder="pseudo"
+            placeholder="John"
             required
           />
         </div>
-        <div className="grid gap-2">
-          <div className="flex items-center"></div>
+        <div className="flex flex-col gap-2 w-full">
+          <label>Mot de passe</label>
           <input
+            className="w-full bg-bgGrey text-dark p-2 rounded-md"
             onChange={handleChange}
+            placeholder="********"
             id="password"
             name="password"
             type="password"
@@ -76,7 +78,11 @@ const FormSignIn = () => {
             required
           />
         </div>
-        <button type="submit" className="w-full">
+
+        <button
+          type="submit"
+          className="w-full bg-violetLight text-dark p-2 rounded-md"
+        >
           Login
         </button>
       </form>

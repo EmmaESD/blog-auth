@@ -13,12 +13,12 @@ const PostsList = ({ postsList, fetchPosts }: PostsListProps) => {
   }, []);
 
   return (
-    <div>
-      <ul>
-        {postsList.map((post) => (
+    <div className="flex overflow-x-auto space-x-4 w-full pb-4">
+      {postsList.map((post) => (
+        <div className="flex-shrink-0">
           <CardPost post={post} key={post.id} />
-        ))}
-      </ul>
+        </div>
+      ))}
     </div>
   );
 };

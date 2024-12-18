@@ -15,10 +15,12 @@ const HomePage = () => {
     }
   };
   return (
-    <div>
-      <h1>Liste des posts</h1>
-      <PostsList postsList={postsList} fetchPosts={fetchPosts} />
-    </div>
+    <section>
+      <div>
+        <h1>Liste des posts</h1>
+        <PostsList postsList={postsList} fetchPosts={fetchPosts} />
+      </div>
+    </section>
   );
 };
 
