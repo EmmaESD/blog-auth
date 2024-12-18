@@ -16,8 +16,8 @@ const HomePage = () => {
   };
   return (
     <section>
-      <div>
-        <h1>Liste des posts</h1>
+      <div className="flex flex-col gap-5">
+        <h1 className="text-xl font-bold">Liste des posts</h1>
         <PostsList postsList={postsList} fetchPosts={fetchPosts} />
       </div>
     </section>

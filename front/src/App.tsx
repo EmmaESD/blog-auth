@@ -12,7 +12,7 @@ import Menu from "./components/Menu";
 function App() {
   return (
     <BrowserRouter>
-      <main className="flex flex-col">
+      <main className="flex flex-col gap-5">
         <Navbar />
         <div>
           <Routes>
